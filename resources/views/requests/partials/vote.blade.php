@@ -1,8 +1,11 @@
-<li class="form__group form__group--short-horizontal" x-data="dialog">
-    <button class="form__button form__button--filled form__button--centered" x-bind="showDialog">
+<li class="form__group form__group--short-horizontal">
+    <button
+        class="form__button form__button--filled form__button--centered"
+        popovertarget="request-vote"
+    >
         {{ __('request.vote') }}
     </button>
-    <dialog class="dialog" x-bind="dialogElement">
+    <dialog id="request-vote" class="dialog" popover>
         <h3 class="dialog__heading">
             {{ __('request.vote-that') }}
         </h3>
@@ -10,7 +13,6 @@
             class="dialog__form"
             method="POST"
             action="{{ route('requests.bounties.store', ['torrentRequest' => $torrentRequest]) }}"
-            x-bind="dialogForm"
         >
             @csrf
             <input id="type" type="hidden" name="request_id" value="{{ $torrentRequest->id }}" />
@@ -44,9 +46,9 @@
                     {{ __('request.vote') }}
                 </button>
                 <button
-                    formmethod="dialog"
-                    formnovalidate
                     class="form__button form__button--outlined"
+                    type="button"
+                    popovertarget="request-vote"
                 >
                     {{ __('common.cancel') }}
                 </button>

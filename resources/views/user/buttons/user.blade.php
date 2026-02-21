@@ -65,17 +65,16 @@
                     </form>
                 @endif
             </li>
-            <li class="nav-tabV2" x-data="dialog">
-                <button class="nav-tab__link" x-bind="showDialog">
+            <li class="nav-tabV2">
+                <button class="nav-tab__link" popovertarget="user-report">
                     {{ __('user.report') }}
                 </button>
-                <dialog class="dialog" x-bind="dialogElement">
+                <dialog id="user-report" class="dialog" popover>
                     <h3 class="dialog__heading">Report user: {{ $user->username }}</h3>
                     <form
                         class="dialog__form"
                         method="POST"
                         action="{{ route('report_user', ['username' => $user->username]) }}"
-                        x-bind="dialogForm"
                     >
                         @csrf
                         <p class="form__group">
@@ -94,9 +93,9 @@
                                 {{ __('common.save') }}
                             </button>
                             <button
-                                formmethod="dialog"
-                                formnovalidate
                                 class="form__button form__button--outlined"
+                                type="button"
+                                popovertarget="user-report"
                             >
                                 {{ __('common.cancel') }}
                             </button>
@@ -306,15 +305,16 @@
                     </form>
                 @endif
 
-                <li class="nav-tabV2" x-data="dialog">
-                    <a class="nav-tab__link" x-bind="showDialog">Download torrent files</a>
+                <li class="nav-tabV2">
+                    <a class="nav-tab__link" popovertarget="user-download-torrents">
+                        Download torrent files
+                    </a>
 
-                    <dialog class="dialog" x-bind="dialogElement">
+                    <dialog id="user-download-torrents" class="dialog" popover>
                         <h3 class="dialog__heading">Download torrent files</h3>
                         <form
                             class="dialog__form"
                             action="{{ route('users.torrent_zip.show', ['user' => $user]) }}"
-                            x-bind="dialogForm"
                         >
                             <fieldset class="form__fieldset">
                                 <legend class="form__legend">Select download type:</legend>
@@ -345,9 +345,9 @@
                                     {{ __('common.download') }}
                                 </button>
                                 <button
-                                    formmethod="dialog"
-                                    formnovalidate
                                     class="form__button form__button--outlined"
+                                    type="button"
+                                    popovertarget="user-download-torrents"
                                 >
                                     {{ __('common.cancel') }}
                                 </button>
