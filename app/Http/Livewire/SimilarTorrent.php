@@ -59,12 +59,6 @@ class SimilarTorrent extends Component
     public string $name = '';
 
     #[Url(history: true)]
-    public string $description = '';
-
-    #[Url(history: true)]
-    public string $mediainfo = '';
-
-    #[Url(history: true)]
     public string $uploader = '';
 
     #[Url(history: true)]
@@ -292,10 +286,8 @@ class SimilarTorrent extends Component
                 )
                 ->where((new TorrentSearchFiltersDTO(
                     name: $this->name,
-                    description: $this->description,
-                    mediainfo: $this->mediainfo,
-                    keywords: $this->keywords ? array_map('trim', explode(',', $this->keywords)) : [],
                     uploader: $this->uploader,
+                    keywords: $this->keywords ? array_map('trim', explode(',', $this->keywords)) : [],
                     episodeNumber: $this->episodeNumber,
                     seasonNumber: $this->seasonNumber,
                     minSize: $this->minSize === null ? null : $this->minSize * $this->minSizeMultiplier,

@@ -125,9 +125,6 @@ Optional Parameters:
 | `sortField`        | string | Field to sort by
 | `sortDirection`    | string | Direction to sort the results. One of: `asc` (Ascending), `desc` (Descending) (default: `asc`)
 | `name`             | string | Filter by the torrent's name
-| `description`      | string | Filter by the torrent's description
-| `mediainfo`        | string | Filter by the torrent's MediaInfo
-| `bdinfo`           | string | Filter by the torrent's BDInfo
 | `uploader`         | string | Filter by the torrent uploader's username
 | `keywords`         | string | Filter by any of the torrent's keywords (Multiple keywords can be comma-separated)
 | `startYear`        | int    | Return only torrents whose content was released after or in the given year

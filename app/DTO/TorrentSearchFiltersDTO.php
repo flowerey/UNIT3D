@@ -30,8 +30,6 @@ readonly class TorrentSearchFiltersDTO
 
     public function __construct(
         private string $name = '',
-        private string $description = '',
-        private string $mediainfo = '',
         private string $uploader = '',
         /** @var array<mixed> */
         private array $keywords = [],
@@ -109,24 +107,6 @@ readonly class TorrentSearchFiltersDTO
                         $isRegex($this->name),
                         fn ($query) => $query->where('name', 'REGEXP', substr($this->name, 1, -1)),
                         fn ($query) => $query->where('name', 'LIKE', '%'.str_replace(' ', '%', $this->name).'%')
-                    )
-            )
-            ->when(
-                $this->description !== '',
-                fn ($query) => $query
-                    ->when(
-                        $isRegex($this->description),
-                        fn ($query) => $query->where('description', 'REGEXP', substr($this->description, 1, -1)),
-                        fn ($query) => $query->where('description', 'LIKE', '%'.$this->description.'%')
-                    )
-            )
-            ->when(
-                $this->mediainfo !== '',
-                fn ($query) => $query
-                    ->when(
-                        $isRegex($this->mediainfo),
-                        fn ($query) => $query->where('mediainfo', 'REGEXP', substr($this->mediainfo, 1, -1)),
-                        fn ($query) => $query->where('mediainfo', 'LIKE', '%'.$this->mediainfo.'%')
                     )
             )
             ->when(

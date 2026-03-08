@@ -152,9 +152,6 @@ final class Torrent extends Model
     public const string SEARCHABLE = <<<'SQL'
             torrents.id,
             torrents.name,
-            torrents.description,
-            torrents.mediainfo,
-            torrents.bdinfo,
             torrents.num_file,
             torrents.folder,
             torrents.size,
@@ -827,9 +824,6 @@ final class Torrent extends Model
         $missingRequiredAttributes = array_diff([
             'id',
             'name',
-            'description',
-            'mediainfo',
-            'bdinfo',
             'num_file',
             'folder',
             'size',
@@ -898,9 +892,6 @@ final class Torrent extends Model
         return [
             'id'                 => $torrent->id,
             'name'               => $torrent->name,
-            'description'        => $torrent->description,
-            'mediainfo'          => $torrent->mediainfo,
-            'bdinfo'             => $torrent->bdinfo,
             'num_file'           => $torrent->num_file,
             'folder'             => $torrent->folder,
             'size'               => $torrent->size,

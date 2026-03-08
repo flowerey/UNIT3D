@@ -541,8 +541,6 @@ class TorrentController extends BaseController
     public function filter(Request $request): TorrentsResource|\Illuminate\Http\JsonResponse
     {
         $user = auth()->user()->load('group');
-        $isRegexAllowed = $user->group->is_modo;
-        $isSqlAllowed = ($user->group->is_modo || $user->group->is_editor) && $request->driver === 'sql';
 
         $request->validate([
             'sortField' => [
@@ -563,8 +561,6 @@ class TorrentController extends BaseController
 
         // Don't cache the api_token so that multiple users can share the cache
         unset($queryParams['api_token']);
-        $queryParams['isRegexAllowed'] = $isRegexAllowed;
-        $queryParams['isSqlAllowed'] = $isSqlAllowed;
 
         // Sorting query params by key (acts by reference)
         ksort($queryParams);
@@ -574,7 +570,7 @@ class TorrentController extends BaseController
         $cacheKey = $url.'?'.$queryString;
 
         /** @phpstan-ignore method.unresolvableReturnType (phpstan is unable to resolve type because it's returning a phpstan-ignored line) */
-        [$torrents, $hasMore] = cache()->flexible($cacheKey, [60 * 5, 60 * 6], function () use ($request, $isSqlAllowed) {
+        [$torrents, $hasMore] = cache()->flexible($cacheKey, [60 * 5, 60 * 6], function () use ($request) {
             $eagerLoads = fn (Builder $query) => $query
                 ->with(['user:id,username', 'category', 'type', 'resolution', 'distributor', 'region', 'files'])
                 ->select('*')
@@ -590,8 +586,6 @@ class TorrentController extends BaseController
 
             $filters = new TorrentSearchFiltersDTO(
                 name: $request->filled('name') ? $request->string('name')->toString() : '',
-                description: $request->filled('description') ? $request->string('description')->toString() : '',
-                mediainfo: $request->filled('mediainfo') ? $request->string('mediainfo')->toString() : '',
                 uploader: $request->filled('uploader') ? $request->string('uploader')->toString() : '',
                 keywords: $request->filled('keywords') ? array_map('trim', explode(',', $request->string('keywords')->toString())) : [],
                 startYear: $request->filled('startYear') ? $request->integer('startYear') : null,
@@ -623,99 +617,79 @@ class TorrentController extends BaseController
                 episodeNumber: $request->filled('episodeNumber') ? $request->integer('episodeNumber') : null,
             );
 
-            if ($isSqlAllowed) {
-                $torrents = Torrent::query()
-                    ->where($filters->toSqlQueryBuilder())
-                    ->latest('sticky')
-                    ->orderBy($request->input('sortField') ?? $this->sortField, $request->input('sortDirection') ?? $this->sortDirection)
-                    ->cursorPaginate(min($request->input('perPage') ?? $this->perPage, 100));
+            $paginator = Torrent::search(
+                $request->filled('name') ? $request->string('name')->toString() : '',
+                function (Indexes $meilisearch, string $query, array $options) use ($request, $filters) {
+                    $options['sort'] = [
+                        ($request->input('sortField') ?: $this->sortField).':'.($request->input('sortDirection') ?? $this->sortDirection),
+                    ];
+                    $options['filter'] = $filters->toMeilisearchFilter();
+                    $options['matchingStrategy'] = 'all';
 
-                // See app/Traits/TorrentMeta.php
-                $this->scopeMeta($torrents);
+                    $results = $meilisearch->search($query, $options);
 
-                $hasMore = $torrents->nextCursor() !== null;
-            } else {
-                $paginator = Torrent::search(
-                    $request->filled('name') ? $request->string('name')->toString() : '',
-                    function (Indexes $meilisearch, string $query, array $options) use ($request, $filters) {
-                        $options['sort'] = [
-                            ($request->input('sortField') ?: $this->sortField).':'.($request->input('sortDirection') ?? $this->sortDirection),
-                        ];
-                        $options['filter'] = $filters->toMeilisearchFilter();
-                        $options['matchingStrategy'] = 'all';
-
-                        $results = $meilisearch->search($query, $options);
-
-                        return $results;
-                    }
-                )
-                    ->query($eagerLoads)
-                    ->simplePaginateRaw(min($request->input('perPage') ?? $this->perPage, 100));
-
-                $hasMore = $paginator->hasMorePages();
-
-                /** @phpstan-ignore method.notFound (this method exists at time of writing) */
-                $results = $paginator->getCollection();
-                $torrents = collect();
-
-                foreach ($results['hits'] ?? [] as $hit) {
-                    $meta = $hit['tmdb_movie'] ?? $hit['tmdb_tv'] ?? [];
-
-                    /** @see TorrentResource */
-                    $torrents->push([
-                        'type'       => 'torrent',
-                        'id'         => (string) $hit['id'],
-                        'attributes' => [
-                            'meta' => [
-                                'poster' => \array_key_exists('poster', $meta) ? tmdb_image('poster_small', $meta['poster']) : null,
-                                'genres' => \array_key_exists('genres', $meta) ? implode(', ', array_column($meta['genres'], 'name')) : '',
-                            ],
-                            'name'             => $hit['name'],
-                            'release_year'     => $meta['year'] ?? null,
-                            'category'         => $hit['category']['name'] ?? null,
-                            'type'             => $hit['type']['name'] ?? null,
-                            'resolution'       => $hit['resolution']['name'] ?? null,
-                            'media_info'       => $hit['mediainfo'],
-                            'bd_info'          => $hit['bdinfo'],
-                            'description'      => $hit['description'],
-                            'info_hash'        => $hit['info_hash'],
-                            'size'             => $hit['size'],
-                            'num_file'         => $hit['num_file'],
-                            'files'            => $hit['files'],
-                            'freeleech'        => $hit['free'].'%',
-                            'double_upload'    => $hit['doubleup'],
-                            'refundable'       => $hit['refundable'],
-                            'internal'         => $hit['internal'],
-                            'featured'         => $hit['featured'],
-                            'personal_release' => $hit['personal_release'],
-                            'uploader'         => $hit['anon'] ? 'Anonymous' : $hit['user']['username'],
-                            'seeders'          => $hit['seeders'],
-                            'leechers'         => $hit['leechers'],
-                            'times_completed'  => $hit['times_completed'],
-                            'tmdb_id'          => $hit['tmdb_movie_id'] ?: $hit['tmdb_tv_id'] ?: 0,
-                            'imdb_id'          => $hit['imdb'],
-                            'tvdb_id'          => $hit['tvdb'],
-                            'mal_id'           => $hit['mal'],
-                            'igdb_id'          => $hit['igdb'],
-                            'category_id'      => $hit['category']['id'] ?? null,
-                            'type_id'          => $hit['type']['id'] ?? null,
-                            'resolution_id'    => $hit['resolution']['id'] ?? null,
-                            'created_at'       => date('Y-m-d\TH:i:s', $hit['created_at']).'.000000Z',
-                            'details_link'     => route('torrents.show', ['id' => $hit['id']]),
-                        ]
-                    ]);
+                    return $results;
                 }
+            )
+                ->query($eagerLoads)
+                ->simplePaginateRaw(min($request->input('perPage') ?? $this->perPage, 100));
 
-                /** @phpstan-ignore method.notFound (this method exists at time of writing) */
-                $torrents = $paginator->setCollection(collect($torrents));
+            $hasMore = $paginator->hasMorePages();
+
+            /** @phpstan-ignore method.notFound (this method exists at time of writing) */
+            $results = $paginator->getCollection();
+            $torrents = collect();
+
+            foreach ($results['hits'] ?? [] as $hit) {
+                $meta = $hit['tmdb_movie'] ?? $hit['tmdb_tv'] ?? [];
+
+                /** @see TorrentResource */
+                $torrents->push([
+                    'type'       => 'torrent',
+                    'id'         => (string) $hit['id'],
+                    'attributes' => [
+                        'meta' => [
+                            'poster' => \array_key_exists('poster', $meta) ? tmdb_image('poster_small', $meta['poster']) : null,
+                            'genres' => \array_key_exists('genres', $meta) ? implode(', ', array_column($meta['genres'], 'name')) : '',
+                        ],
+                        'name'             => $hit['name'],
+                        'release_year'     => $meta['year'] ?? null,
+                        'category'         => $hit['category']['name'] ?? null,
+                        'type'             => $hit['type']['name'] ?? null,
+                        'resolution'       => $hit['resolution']['name'] ?? null,
+                        'info_hash'        => $hit['info_hash'],
+                        'size'             => $hit['size'],
+                        'num_file'         => $hit['num_file'],
+                        'files'            => $hit['files'],
+                        'freeleech'        => $hit['free'].'%',
+                        'double_upload'    => $hit['doubleup'],
+                        'refundable'       => $hit['refundable'],
+                        'internal'         => $hit['internal'],
+                        'featured'         => $hit['featured'],
+                        'personal_release' => $hit['personal_release'],
+                        'uploader'         => $hit['anon'] ? 'Anonymous' : $hit['user']['username'],
+                        'seeders'          => $hit['seeders'],
+                        'leechers'         => $hit['leechers'],
+                        'times_completed'  => $hit['times_completed'],
+                        'tmdb_id'          => $hit['tmdb_movie_id'] ?: $hit['tmdb_tv_id'] ?: 0,
+                        'imdb_id'          => $hit['imdb'],
+                        'tvdb_id'          => $hit['tvdb'],
+                        'mal_id'           => $hit['mal'],
+                        'igdb_id'          => $hit['igdb'],
+                        'category_id'      => $hit['category']['id'] ?? null,
+                        'type_id'          => $hit['type']['id'] ?? null,
+                        'resolution_id'    => $hit['resolution']['id'] ?? null,
+                        'created_at'       => date('Y-m-d\TH:i:s', $hit['created_at']).'.000000Z',
+                        'details_link'     => route('torrents.show', ['id' => $hit['id']]),
+                    ]
+                ]);
             }
+
+            /** @phpstan-ignore method.notFound (this method exists at time of writing) */
+            $torrents = $paginator->setCollection(collect($torrents));
 
             return [$torrents, $hasMore];
         });
-
-        if ($isSqlAllowed) {
-            return new TorrentsResource($torrents);
-        }
 
         $page = $request->integer('page') ?: 1;
         $perPage = min(100, $request->integer('perPage') ?: 25);

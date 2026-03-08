@@ -25,28 +25,6 @@
             <div class="form__group--short-horizontal">
                 <p class="form__group">
                     <input
-                        id="description"
-                        wire:model.live="description"
-                        class="form__text"
-                        placeholder=" "
-                    />
-                    <label class="form__label form__label--floating" for="description">
-                        {{ __('torrent.description') }}
-                    </label>
-                </p>
-                <p class="form__group">
-                    <input
-                        id="mediainfo"
-                        wire:model.live="mediainfo"
-                        class="form__text"
-                        placeholder=" "
-                    />
-                    <label class="form__label form__label--floating" for="mediainfo">
-                        {{ __('torrent.media-info') }}
-                    </label>
-                </p>
-                <p class="form__group">
-                    <input
                         id="keywords"
                         wire:model.live="keywords"
                         class="form__text"
