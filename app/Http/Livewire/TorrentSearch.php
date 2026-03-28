@@ -367,7 +367,7 @@ class TorrentSearch extends Component
             description: $this->description,
             mediainfo: $this->mediainfo,
             uploader: $this->uploader,
-            keywords: $this->keywords ? array_map('trim', explode(',', $this->keywords)) : [],
+            keywords: $this->keywords ? array_map(trim(...), explode(',', $this->keywords)) : [],
             startYear: $this->startYear,
             endYear: $this->endYear,
             minSize: $this->minSize === null ? null : $this->minSize * $this->minSizeMultiplier,

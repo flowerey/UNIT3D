@@ -55,7 +55,7 @@ class AutoGroup extends Command
             ->orderByDesc('position')
             ->get();
 
-        $userIds = array_map('intval', (array) $this->argument('user_ids'));
+        $userIds = array_map(intval(...), (array) $this->argument('user_ids'));
 
         $userQuery = User::query()
             ->withSum('seedingTorrents as seedsize', 'size')

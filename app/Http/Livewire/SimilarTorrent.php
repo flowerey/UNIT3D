@@ -295,7 +295,7 @@ class SimilarTorrent extends Component
                     name: $this->name,
                     description: $this->description,
                     mediainfo: $this->mediainfo,
-                    keywords: $this->keywords ? array_map('trim', explode(',', $this->keywords)) : [],
+                    keywords: $this->keywords ? array_map(trim(...), explode(',', $this->keywords)) : [],
                     uploader: $this->uploader,
                     episodeNumber: $this->episodeNumber,
                     seasonNumber: $this->seasonNumber,
