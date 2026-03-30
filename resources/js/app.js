@@ -42,6 +42,7 @@ import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.e
 import './components/alpine/chatbox';
 import './components/alpine/checkboxGrid';
 import './components/alpine/clipboardButton';
+import './components/alpine/comparison';
 import './components/alpine/dialog';
 import './components/alpine/dislikeButton';
 import './components/alpine/likeButton';
