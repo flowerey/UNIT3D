@@ -63,7 +63,7 @@ class AutoUpsertPeers extends Command
                 break;
             }
 
-            $peers = array_map('unserialize', $peers);
+            $peers = array_map(unserialize(...), $peers);
 
             DB::transaction(function () use ($peers): void {
                 Peer::query()->upsert(

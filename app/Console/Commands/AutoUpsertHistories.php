@@ -79,7 +79,7 @@ class AutoUpsertHistories extends Command
                 break;
             }
 
-            $histories = array_map('unserialize', $histories);
+            $histories = array_map(unserialize(...), $histories);
 
             DB::transaction(function () use ($histories): void {
                 History::query()->upsert(
