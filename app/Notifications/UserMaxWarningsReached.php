@@ -86,7 +86,7 @@ class UserMaxWarningsReached extends Notification implements ShouldQueue
         return [
             'title' => 'Hit and run warning limit reached',
             'body'  => 'You reached the active hit and run warning limit. Download privileges were revoked.',
-            'url'   => \sprintf('/users/%s', $this->user->username),
+            'url'   => route('users.show', ['user' => $this->user], false),
         ];
     }
 

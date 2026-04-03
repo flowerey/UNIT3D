@@ -84,7 +84,7 @@ class NewTopic extends Notification implements ShouldQueue
         return [
             'title' => $username.' posted in a subscribed forum',
             'body'  => $username.' has started a new topic in '.$this->topic->forum->name,
-            'url'   => \sprintf('/forums/topics/%s', $this->topic->id),
+            'url'   => route('topics.show', ['id' => $this->topic->id], false),
         ];
     }
 }

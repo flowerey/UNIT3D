@@ -75,7 +75,7 @@ class NewUpload extends Notification implements ShouldQueue
         return [
             'title' => $this->torrent->user->username.' uploaded a new torrent',
             'body'  => \sprintf('%s uploaded torrent %s', $this->torrent->user->username, $this->torrent->name),
-            'url'   => \sprintf('/torrents/%s', $this->torrent->id),
+            'url'   => route('torrents.show', ['id' => $this->torrent->id], false),
         ];
     }
 }

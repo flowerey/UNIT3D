@@ -78,7 +78,7 @@ class NewRequestFill extends Notification implements ShouldQueue
         return [
             'title' => ($this->torrentRequest->filled_anon ? 'Anonymous' : $this->torrentRequest->filler->username).' filled one of your torrent requests',
             'body'  => ($this->torrentRequest->filled_anon ? 'Anonymous' : $this->torrentRequest->filler->username).' filled one of your requested torrents: '.$this->torrentRequest->name,
-            'url'   => \sprintf('/requests/%s', $this->torrentRequest->id),
+            'url'   => route('requests.show', ['torrentRequest' => $this->torrentRequest], false),
         ];
     }
 }

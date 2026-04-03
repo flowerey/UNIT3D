@@ -32,7 +32,6 @@ class IRCAnnounceBotExternal
             return false;
         }
 
-        $appurl = config('app.url');
         $announceTypeEnum = 0; // 0 NEW
 
         $originEnum = match (true) {
@@ -73,7 +72,7 @@ class IRCAnnounceBotExternal
 
         return self::post([
             'id'                     => $torrent->id,
-            'url'                    => \sprintf('%s/torrents/%d', $appurl, $torrent->id),
+            'url'                    => href_torrent($torrent),
             'name'                   => $torrent->name,
             'uploader'               => $torrent->anon ? 'Anonymous' : $torrent->user->username,
             'size'                   => $torrent->getSize(),

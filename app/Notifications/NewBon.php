@@ -78,7 +78,7 @@ class NewBon extends Notification implements ShouldQueue
         return [
             'title' => $this->gift->sender->username.' gifted you '.$this->gift->bon.' BON',
             'body'  => $this->gift->sender->username.' gifted you '.$this->gift->bon.' BON. Note: '.$this->gift->message,
-            'url'   => \sprintf('/users/%s', $this->gift->sender->username),
+            'url'   => route('users.show', ['user' => $this->gift->sender], false),
         ];
     }
 }

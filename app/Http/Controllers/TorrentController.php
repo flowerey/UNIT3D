@@ -628,7 +628,6 @@ class TorrentController extends Controller
 
         // check for trusted user and update torrent
         if ($user->group->is_trusted && !$request->boolean('mod_queue_opt_in')) {
-            $appurl = config('app.url');
             $user = $torrent->user;
             $username = $user->username;
             $anon = $torrent->anon;
@@ -636,17 +635,17 @@ class TorrentController extends Controller
             // Announce To Shoutbox
             if (!$anon) {
                 $this->chatRepository->systemMessage(
-                    \sprintf('User [url=%s/users/', $appurl).$username.']'.$username.\sprintf('[/url] has uploaded a new '.$torrent->category->name.'. [url=%s/torrents/', $appurl).$torrent->id.']'.$torrent->name.'[/url], grab it now!'
+                    'User [url='.href_profile($user).']'.$username.'[/url] has uploaded a new '.$torrent->category->name.'. [url='.href_torrent($torrent).']'.$torrent->name.'[/url], grab it now!'
                 );
             } else {
                 $this->chatRepository->systemMessage(
-                    \sprintf('An anonymous user has uploaded a new '.$torrent->category->name.'. [url=%s/torrents/', $appurl).$torrent->id.']'.$torrent->name.'[/url], grab it now!'
+                    'An anonymous user has uploaded a new '.$torrent->category->name.'. [url='.href_torrent($torrent).']'.$torrent->name.'[/url], grab it now!'
                 );
             }
 
             if ($torrent->free >= 1) {
                 $this->chatRepository->systemMessage(
-                    \sprintf('Ladies and Gents, [url=%s/torrents/', $appurl).$torrent->id.']'.$torrent->name.'[/url] has been granted '.$torrent->free.'% FreeLeech! Grab It While You Can!'
+                    'Ladies and Gents, [url='.href_torrent($torrent).']'.$torrent->name.'[/url] has been granted '.$torrent->free.'% FreeLeech! Grab It While You Can!'
                 );
             }
 

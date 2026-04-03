@@ -84,7 +84,7 @@ class NewPostTag extends Notification implements ShouldQueue
         return [
             'title' => $title,
             'body'  => $username.' tagged you in a post in topic '.$this->post->topic->name,
-            'url'   => \sprintf('/forums/topics/%s/posts/%s', $this->post->topic->id, $this->post->id),
+            'url'   => route('topics.permalink', ['topicId' => $this->post->topic->id, 'postId' => $this->post->id], false),
         ];
     }
 }

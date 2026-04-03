@@ -79,14 +79,14 @@ class NewRequestFillApprove extends Notification implements ShouldQueue
             return [
                 'title' => $this->torrentRequest->approver->username.' approved your fill for a requested torrent',
                 'body'  => $this->torrentRequest->approver->username.' approved your fill for requested torrent: '.$this->torrentRequest->name,
-                'url'   => \sprintf('/requests/%s', $this->torrentRequest->id),
+                'url'   => route('requests.show', ['torrentRequest' => $this->torrentRequest], false),
             ];
         }
 
         return [
             'title' => 'An anonymous user approved your fill for a requested torrent',
             'body'  => 'An anonymous user approved your fill for requested torrent: '.$this->torrentRequest->name,
-            'url'   => \sprintf('/requests/%s', $this->torrentRequest->id),
+            'url'   => route('requests.show', ['torrentRequest' => $this->torrentRequest], false),
         ];
     }
 }

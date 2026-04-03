@@ -78,7 +78,7 @@ class NewRequestClaim extends Notification implements ShouldQueue
         return [
             'title' => ($this->claim->anon ? 'Anonymous' : $this->claim->user->username).' claimed one of your requested torrents',
             'body'  => ($this->claim->anon ? 'Anonymous' : $this->claim->user->username).' claimed your requested torrent: '.$this->claim->request->name,
-            'url'   => \sprintf('/requests/%s', $this->claim->request_id),
+            'url'   => route('requests.show', ['torrentRequest' => $this->claim->request_id], false),
         ];
     }
 }
