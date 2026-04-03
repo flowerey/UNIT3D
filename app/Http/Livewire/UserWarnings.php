@@ -128,7 +128,9 @@ class UserWarnings extends Component
             'active'     => false,
         ]);
 
-        $this->user->notify(new WarningDeactivated($staff, $warning));
+        if ($warning->torrent()->exists()) {
+            $this->user->notify(new WarningDeactivated($staff, $warning));
+        }
 
         $this->dispatch('success', type: 'success', message: 'Warning was successfully deactivated');
     }
@@ -187,7 +189,9 @@ class UserWarnings extends Component
 
         $warning->delete();
 
-        $this->user->notify(new WarningTorrentDeleted($staff, $warning));
+        if ($warning->torrent()->exists()) {
+            $this->user->notify(new WarningTorrentDeleted($staff, $warning));
+        }
 
         $this->dispatch('success', type: 'success', message: 'Warning was successfully deleted');
     }
