@@ -44,8 +44,8 @@ class StoreTorrentRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'tmdb_movie_id'    => $this->input('tmdb_movie_id') ?: null,
-            'tmdb_tv_id'       => $this->input('tmdb_tv_id') ?: null,
+            'tmdb_movie_id'    => $this->input('tmdb') ?: null,
+            'tmdb_tv_id'       => $this->input('tmdb') ?: null,
             'imdb'             => $this->input('imdb') ?: null,
             'tvdb'             => $this->input('tvdb') ?: null,
             'mal'              => $this->input('mal') ?: null,
@@ -66,12 +66,6 @@ class StoreTorrentRequest extends FormRequest
     {
         $user = $request->user()->loadExists('internals');
         $category = Category::query()->findOrFail($request->integer('category_id'));
-
-        $mustBeNull = function (string $attribute, mixed $value, callable $fail): void {
-            if ($value !== null) {
-                $fail("The {$attribute} must be null.");
-            }
-        };
 
         return [
             'torrent' => [
@@ -170,9 +164,7 @@ class StoreTorrentRequest extends FormRequest
                     'decimal:0',
                     'min:0',
                 ]),
-                Rule::when(!($category->movie_meta || $category->tv_meta), [
-                    $mustBeNull,
-                ]),
+                Rule::excludeIf(!($category->movie_meta || $category->tv_meta)),
             ],
             'tvdb' => [
                 Rule::when($category->tv_meta, [
@@ -180,9 +172,7 @@ class StoreTorrentRequest extends FormRequest
                     'decimal:0',
                     'min:0',
                 ]),
-                Rule::when(!$category->tv_meta, [
-                    $mustBeNull,
-                ]),
+                Rule::excludeIf(!$category->tv_meta),
             ],
             'tmdb_movie_id' => [
                 Rule::when($category->movie_meta, [
@@ -190,9 +180,7 @@ class StoreTorrentRequest extends FormRequest
                     'decimal:0',
                     'min:0',
                 ]),
-                Rule::when(!$category->movie_meta, [
-                    $mustBeNull,
-                ]),
+                Rule::excludeIf(!$category->movie_meta),
             ],
             'tmdb_tv_id' => [
                 Rule::when($category->tv_meta, [
@@ -200,9 +188,7 @@ class StoreTorrentRequest extends FormRequest
                     'decimal:0',
                     'min:0',
                 ]),
-                Rule::when(!$category->tv_meta, [
-                    $mustBeNull,
-                ]),
+                Rule::excludeIf(!$category->tv_meta),
             ],
             'mal' => [
                 Rule::when($category->movie_meta || $category->tv_meta, [
@@ -210,9 +196,7 @@ class StoreTorrentRequest extends FormRequest
                     'decimal:0',
                     'min:0',
                 ]),
-                Rule::when(!($category->movie_meta || $category->tv_meta), [
-                    $mustBeNull,
-                ]),
+                Rule::excludeIf(!($category->movie_meta || $category->tv_meta)),
             ],
             'igdb' => [
                 Rule::when($category->game_meta, [
@@ -220,9 +204,7 @@ class StoreTorrentRequest extends FormRequest
                     'decimal:0',
                     'min:0',
                 ]),
-                Rule::when(!$category->game_meta, [
-                    $mustBeNull,
-                ]),
+                Rule::excludeIf(!$category->game_meta),
             ],
             'season_number' => [
                 Rule::when($category->tv_meta, [
