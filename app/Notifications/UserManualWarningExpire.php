@@ -87,7 +87,7 @@ class UserManualWarningExpire extends Notification implements ShouldQueue
         return [
             'title' => 'Manual warning expired',
             'body'  => 'You were warned for '.$this->warning->reason.'. That warning has now expired.',
-            'url'   => \sprintf('/users/%s', $this->user->username),
+            'url'   => route('users.show', ['user' => $this->user], false),
         ];
     }
 

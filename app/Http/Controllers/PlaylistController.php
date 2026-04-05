@@ -85,7 +85,7 @@ class PlaylistController extends Controller
         // Announce To Shoutbox
         if (!$playlist->is_private) {
             $this->chatRepository->systemMessage(
-                \sprintf('User [url=%s/', config('app.url')).$request->user()->username.'.'.$request->user()->id.']'.$request->user()->username.\sprintf('[/url] has created a new playlist [url=%s/playlists/', config('app.url')).$playlist->id.']'.$playlist->name.'[/url] check it out now!'
+                'User [url='.href_profile($request->user()).']'.$request->user()->username.'[/url] has created a new playlist [url='.href_playlist($playlist).']'.$playlist->name.'[/url] check it out now!'
             );
         }
 

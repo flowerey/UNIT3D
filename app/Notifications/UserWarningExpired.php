@@ -86,7 +86,7 @@ class UserWarningExpired extends Notification implements ShouldQueue
         return [
             'title' => 'Warning expired',
             'body'  => 'One or more warnings expired or were seeded off.',
-            'url'   => \sprintf('/users/%s', $this->user->username),
+            'url'   => route('users.show', ['user' => $this->user], false),
         ];
     }
 

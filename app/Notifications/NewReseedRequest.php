@@ -49,12 +49,10 @@ class NewReseedRequest extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
-        $appurl = config('app.url');
-
         return [
             'title' => 'Reseed request',
             'body'  => \sprintf('You downloaded this earlier: %s. It is now dead and someone requested a reseed. If you still have it, please reseed.', $this->torrent->name),
-            'url'   => \sprintf('%s/torrents/%s', $appurl, $this->torrent->id),
+            'url'   => href_torrent($this->torrent),
         ];
     }
 }

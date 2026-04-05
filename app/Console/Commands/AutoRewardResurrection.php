@@ -72,10 +72,8 @@ class AutoRewardResurrection extends Command
                     $resurrection->user->increment('fl_tokens', (int) config('graveyard.reward'));
 
                     // Auto Shout
-                    $appurl = config('app.url');
-
                     $this->chatRepository->systemMessage(
-                        \sprintf('Ladies and Gents, [url=%s/users/%s]%s[/url] has successfully resurrected [url=%s/torrents/%s]%s[/url].', $appurl, $resurrection->user->username, $resurrection->user->username, $appurl, $resurrection->torrent->id, $resurrection->torrent->name)
+                        \sprintf('Ladies and Gents, [url=%s]%s[/url] has successfully resurrected [url=%s]%s[/url].', href_profile($resurrection->user), $resurrection->user->username, href_torrent($resurrection->torrent), $resurrection->torrent->name)
                     );
 
                     // Bump Torrent With FL

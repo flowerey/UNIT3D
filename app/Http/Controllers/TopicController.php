@@ -144,9 +144,8 @@ class TopicController extends Controller
         ]);
 
         // Post To ShoutBox
-        $appUrl = config('app.url');
-        $topicUrl = \sprintf('%s/forums/topics/%s', $appUrl, $topic->id);
-        $profileUrl = \sprintf('%s/users/%s', $appUrl, $user->username);
+        $topicUrl = route('topics.show', ['id' => $topic->id]);
+        $profileUrl = href_profile($user);
 
         if (config('other.staff-forum-notify') && ($forum->id == config('other.staff-forum-id') || $forum->forum_category_id == config('other.staff-forum-id'))) {
             $staffers = User::query()

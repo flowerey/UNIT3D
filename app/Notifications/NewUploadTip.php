@@ -54,7 +54,7 @@ class NewUploadTip extends Notification implements ShouldQueue
         return [
             'title' => $this->tip->sender->username.' tipped you '.$this->tip->bon.' BON for an uploaded torrent',
             'body'  => $this->tip->sender->username.' tipped your uploaded torrent: '.$this->tip->torrent->name,
-            'url'   => \sprintf('/torrents/%s', $this->tip->torrent_id),
+            'url'   => route('torrents.show', ['id' => $this->tip->torrent_id], false),
         ];
     }
 }
