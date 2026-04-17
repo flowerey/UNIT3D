@@ -89,17 +89,17 @@
     @endif
 
     @if ($torrent->nfo)
-        <li x-data="dialog" class="form__group form__group--short-horizontal">
+        <li class="form__group form__group--short-horizontal">
             <button
                 class="form__button form__button--outlined form__button--centered"
-                x-bind="showDialog"
+                popovertarget="torrent-nfo"
             >
                 <i class="{{ config('other.font-awesome') }} fa-info-circle"></i>
                 NFO
             </button>
-            <dialog class="dialog dialog--auto-width" x-bind="dialogElement">
+            <dialog id="torrent-nfo" class="dialog dialog--auto-width" popover>
                 <h4 class="dialog__heading">NFO</h4>
-                <div class="dialog__form" x-bind="dialogForm">
+                <div class="dialog__form">
                     <div class="bbcode-rendered" style="text-align: left">
                         <pre
                             class="torrent__nfo-pre"
@@ -111,15 +111,15 @@
     @endif
 
     @if ($torrent->status === \App\Enums\ModerationStatus::APPROVED)
-        <li x-data="dialog" class="form__group form__group--short-horizontal">
+        <li class="form__group form__group--short-horizontal">
             <button
                 class="form__button form__button--outlined form__button--centered"
-                x-bind="showDialog"
+                popovertarget="torrent-tip"
             >
                 <i class="{{ config('other.font-awesome') }} fa-coins"></i>
                 {{ __('torrent.leave-tip') }}
             </button>
-            <dialog class="dialog" x-bind="dialogElement">
+            <dialog id="torrent-tip" class="dialog" popover>
                 <h4 class="dialog__heading">
                     {{ __('torrent.tip-jar') }}
                 </h4>
@@ -127,7 +127,6 @@
                     class="dialog__form"
                     method="POST"
                     action="{{ route('users.torrent_tips.store', ['user' => auth()->user()]) }}"
-                    x-bind="dialogForm"
                 >
                     @csrf
                     <input type="hidden" name="torrent_id" value="{{ $torrent->id }}" />
@@ -169,16 +168,16 @@
         </li>
     @endif
 
-    <li x-data="dialog" class="form__group form__group--short-horizontal">
+    <li class="form__group form__group--short-horizontal">
         <button
             class="form__button form__button--outlined form__button--centered"
             title="{{ __('common.edit') }}"
-            x-bind="showDialog"
+            popovertarget="torrent-files"
         >
             <i class="{{ config('other.font-awesome') }} fa-file"></i>
             {{ __('torrent.show-files') }}
         </button>
-        <dialog class="dialog dialog--auto-width" x-bind="dialogElement">
+        <dialog id="torrent-files" class="dialog dialog--auto-width" popover>
             <header class="dialog__header">
                 <h4 class="dialog__heading">
                     {{ __('common.files') }}
@@ -192,7 +191,7 @@
                     </div>
                 @endif
             </header>
-            <div x-bind="dialogForm" x-data="tabs('hierarchy')">
+            <div x-data="tabs('hierarchy')">
                 <menu class="panel__tabs">
                     <li x-bind="tabButton" data-tab="hierarchy">Hierarchy</li>
                     <li x-bind="tabButton" data-tab="list">List</li>
@@ -265,21 +264,20 @@
     @endif
 
     @if ($torrent->status === \App\Enums\ModerationStatus::APPROVED && $user->playlists->count() > 0)
-        <li x-data="dialog" class="form__group form__group--short-horizontal">
+        <li class="form__group form__group--short-horizontal">
             <button
                 class="form__button form__button--outlined form__button--centered"
-                x-bind="showDialog"
+                popovertarget="torrent-playlist-add"
             >
                 <i class="{{ config('other.font-awesome') }} fa-list-ol"></i>
                 {{ __('torrent.add-to-playlist') }}
             </button>
-            <dialog class="dialog" x-bind="dialogElement">
+            <dialog id="torrent-playlist-add" class="dialog" popover>
                 <h4 class="dialog__heading">Add torrent to playlist</h4>
                 <form
                     class="dialog__form"
                     method="POST"
                     action="{{ route('playlist_torrents.store') }}"
-                    x-bind="dialogForm"
                 >
                     @csrf
                     <input type="hidden" name="torrent_id" value="{{ $torrent->id }}" />
@@ -298,9 +296,9 @@
                             {{ __('common.save') }}
                         </button>
                         <button
-                            formmethod="dialog"
-                            formnovalidate
                             class="form__button form__button--outlined"
+                            type="button"
+                            popovertarget="torrent-playlist-add"
                         >
                             {{ __('common.cancel') }}
                         </button>
@@ -337,15 +335,15 @@
             </button>
         </li>
     @elseif ($torrent->seeders == 0 && $torrent->created_at->lt(\Illuminate\Support\Carbon::now()->subDays(30)) && $torrent->status === \App\Enums\ModerationStatus::APPROVED)
-        <li class="form__group form__group--short-horizontal" x-data="dialog">
+        <li class="form__group form__group--short-horizontal">
             <button
                 class="form__button form__button--outlined form__button--centered"
-                x-bind="showDialog"
+                popovertarget="torrent-resurrect"
             >
                 <i class="{{ config('other.font-awesome') }} fa-list-ol"></i>
                 {{ __('graveyard.resurrect') }}
             </button>
-            <dialog class="dialog" x-bind="dialogElement">
+            <dialog id="torrent-resurrect" class="dialog" popover>
                 <h4 class="dialog__heading">
                     {{ __('graveyard.resurrect') }} {{ strtolower(__('torrent.torrent')) }} ?
                 </h4>
@@ -353,7 +351,6 @@
                     class="dialog__form"
                     method="POST"
                     action="{{ route('users.resurrections.store', ['user' => auth()->user()]) }}"
-                    x-bind="dialogForm"
                 >
                     @csrf
                     <input type="hidden" name="torrent_id" value="{{ $torrent->id }}" />
@@ -371,9 +368,9 @@
                             {{ __('graveyard.resurrect') }}
                         </button>
                         <button
-                            formmethod="dialog"
-                            formnovalidate
                             class="form__button form__button--outlined"
+                            type="button"
+                            popovertarget="torrent-resurrect"
                         >
                             {{ __('common.cancel') }}
                         </button>
@@ -383,16 +380,16 @@
         </li>
     @endif
     @if ($torrent->status === \App\Enums\ModerationStatus::APPROVED)
-        <li x-data="dialog" class="form__group form__group--short-horizontal">
+        <li class="form__group form__group--short-horizontal">
             <button
                 class="form__button form__button--outlined form__button--centered"
-                x-bind="showDialog"
+                popovertarget="torrent-report"
                 title="This torrent currently has {{ $torrent->unsolvedReports }} unsolved report(s)"
             >
                 <i class="{{ config('other.font-awesome') }} fa-fw fa-eye"></i>
                 {{ __('common.report') }} ({{ $torrent->unsolvedReports }})
             </button>
-            <dialog class="dialog" x-bind="dialogElement">
+            <dialog id="torrent-report" class="dialog" popover>
                 <h4 class="dialog__heading">
                     {{ __('common.report') }} {{ strtolower(__('torrent.torrent')) }}:
                     {{ $torrent->name }}
@@ -401,7 +398,6 @@
                     class="dialog__form"
                     method="POST"
                     action="{{ route('report_torrent', ['id' => $torrent->id]) }}"
-                    x-bind="dialogForm"
                 >
                     @csrf
                     <input type="hidden" name="torrent_id" value="{{ $torrent->id }}" />
@@ -425,9 +421,9 @@
                             {{ __('common.report') }}
                         </button>
                         <button
-                            formmethod="dialog"
-                            formnovalidate
                             class="form__button form__button--outlined"
+                            type="button"
+                            popovertarget="torrent-report"
                         >
                             {{ __('common.cancel') }}
                         </button>
@@ -439,15 +435,15 @@
 
     @if ($user->group->is_modo)
         @if (! $torrent->trump_exists)
-            <li x-data="dialog" class="form__group form__group--short-horizontal">
+            <li class="form__group form__group--short-horizontal">
                 <button
                     class="form__button form__button--outlined form__button--centered"
-                    x-bind="showDialog"
+                    popovertarget="torrent-trump"
                 >
                     <i class="{{ config('other.font-awesome') }} fa-skull-crossbones"></i>
                     Mark trumpable
                 </button>
-                <dialog class="dialog" x-bind="dialogElement">
+                <dialog id="torrent-trump" class="dialog" popover>
                     <h4 class="dialog__heading">
                         Trump {{ strtolower(__('torrent.torrent')) }}:
                         {{ $torrent->name }}
@@ -456,7 +452,6 @@
                         class="dialog__form"
                         method="POST"
                         action="{{ route('torrent.trump.store', ['torrent' => $torrent]) }}"
-                        x-bind="dialogForm"
                     >
                         @csrf
                         <input type="hidden" name="torrent_id" value="{{ $torrent->id }}" />
@@ -480,9 +475,9 @@
                                 {{ __('common.save') }}
                             </button>
                             <button
-                                formmethod="dialog"
-                                formnovalidate
                                 class="form__button form__button--outlined"
+                                type="button"
+                                popovertarget="torrent-trump"
                             >
                                 {{ __('common.cancel') }}
                             </button>

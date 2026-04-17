@@ -68,17 +68,19 @@
                         </div>
                     @endif
                     @if (auth()->id() !== $user->id)
-                        <div class="panel__action" x-data="dialog">
-                            <button class="form__button form__button--text" x-bind="showDialog">
+                        <div class="panel__action">
+                            <button
+                                class="form__button form__button--text"
+                                popovertarget="user-profile-report"
+                            >
                                 Report
                             </button>
-                            <dialog class="dialog" x-bind="dialogElement">
+                            <dialog id="user-profile-report" class="dialog" popover>
                                 <h3 class="dialog__heading">Report user: {{ $user->username }}</h3>
                                 <form
                                     class="dialog__form"
                                     method="POST"
                                     action="{{ route('report_user', ['username' => $user->username]) }}"
-                                    x-bind="dialogForm"
                                 >
                                     @csrf
                                     <p class="form__group">
@@ -100,9 +102,9 @@
                                             {{ __('common.save') }}
                                         </button>
                                         <button
-                                            formmethod="dialog"
-                                            formnovalidate
                                             class="form__button form__button--outlined"
+                                            type="button"
+                                            popovertarget="user-profile-report"
                                         >
                                             {{ __('common.cancel') }}
                                         </button>
@@ -465,14 +467,14 @@
                     <h2 class="panel__heading">Watchlist</h2>
                     <div class="panel__actions">
                         @if ($watch === null)
-                            <div class="panel__action" x-data="dialog">
+                            <div class="panel__action">
                                 <button
                                     class="form__button form__button--text"
-                                    x-bind="showDialog"
+                                    popovertarget="watched-users-add"
                                 >
                                     Watch
                                 </button>
-                                <dialog class="dialog" x-bind="dialogElement">
+                                <dialog id="watched-users-add" class="dialog" popover>
                                     <h3 class="dialog__heading">
                                         Watch user: {{ $user->username }}
                                     </h3>
@@ -480,7 +482,6 @@
                                         class="dialog__form"
                                         method="POST"
                                         action="{{ route('staff.watchlist.store') }}"
-                                        x-bind="dialogForm"
                                     >
                                         @csrf
                                         <input
@@ -507,9 +508,9 @@
                                                 {{ __('common.save') }}
                                             </button>
                                             <button
-                                                formaction="dialog"
-                                                formnovalidate
                                                 class="form__button form__button--outlined"
+                                                type="button"
+                                                popovertarget="watched-users-add"
                                             >
                                                 {{ __('common.cancel') }}
                                             </button>
@@ -1203,14 +1204,14 @@
                     <h2 class="panel__heading">{{ __('user.bon') }}</h2>
                     @if (auth()->user()->isNot($user))
                         <div class="panel__actions">
-                            <div class="panel__action" x-data="dialog">
+                            <div class="panel__action">
                                 <button
                                     class="form__button form__button--text"
-                                    x-bind="showDialog"
+                                    popovertarget="gift-add"
                                 >
                                     Gift BON
                                 </button>
-                                <dialog class="dialog" x-bind="dialogElement">
+                                <dialog id="gift-add" class="dialog" popover>
                                     <h3 class="dialog__heading">
                                         Gift BON to: {{ $user->username }}
                                     </h3>
@@ -1218,7 +1219,6 @@
                                         class="dialog__form"
                                         method="POST"
                                         action="{{ route('users.gifts.store', ['user' => auth()->user()]) }}"
-                                        x-bind="dialogForm"
                                     >
                                         @csrf
                                         <input
@@ -1263,9 +1263,9 @@
                                                 {{ __('bon.gift') }}
                                             </button>
                                             <button
-                                                formmethod="dialog"
-                                                formnovalidate
                                                 class="form__button form__button--outlined"
+                                                type="button"
+                                                popovertarget="gift-add"
                                             >
                                                 {{ __('common.cancel') }}
                                             </button>
