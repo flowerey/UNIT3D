@@ -9,6 +9,7 @@
             x-ref="quickSearch"
             x-on:keydown.down.prevent="focusFirstResult"
             x-on:keydown.up.prevent="focusLastResult"
+            x-on:keydown.enter="navigateToFirstResult"
             x-on:focus="searchPerformed = true"
         />
         <template x-if="searchResults === null">
@@ -89,6 +90,13 @@
                     this.searchText = '';
                     this.searchResults = [];
                     this.searchPerformed = false;
+                },
+                navigateToFirstResult() {
+                    if (Array.isArray(this.searchResults) && this.searchResults.length > 0) {
+                        window.location.href = this.searchResults[0].url;
+                    } else if (this.searchText.length > 0) {
+                        window.location.href = `/torrents?name=${encodeURIComponent(this.searchText)}`;
+                    }
                 },
                 focusFirstResult() {
                     document.querySelector('[x-ref="searchResults"]').querySelector('a').focus();
