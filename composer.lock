@@ -13038,34 +13038,34 @@
         },
         {
             "name": "tomasvotruba/bladestan",
-            "version": "0.11.3",
+            "version": "0.11.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bladestan/bladestan.git",
-                "reference": "f1dedaeb283718cf78ac02ba4d013d3a3b86eda1"
+                "reference": "ceb0823cd4b4f400b64a008cace0d91e786a2859"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bladestan/bladestan/zipball/f1dedaeb283718cf78ac02ba4d013d3a3b86eda1",
-                "reference": "f1dedaeb283718cf78ac02ba4d013d3a3b86eda1",
+                "url": "https://api.github.com/repos/bladestan/bladestan/zipball/ceb0823cd4b4f400b64a008cace0d91e786a2859",
+                "reference": "ceb0823cd4b4f400b64a008cace0d91e786a2859",
                 "shasum": ""
             },
             "require": {
-                "illuminate/contracts": "^11.15|^12.0",
-                "illuminate/filesystem": "^11.15|^12.0",
-                "illuminate/mail": "^11.15|^12.0",
-                "illuminate/notifications": "^11.15|^12.0",
-                "illuminate/view": "^11.15|^12.0",
+                "illuminate/contracts": "^11.15|^12.0|^13.0",
+                "illuminate/filesystem": "^11.15|^12.0|^13.0",
+                "illuminate/mail": "^11.15|^12.0|^13.0",
+                "illuminate/notifications": "^11.15|^12.0|^13.0",
+                "illuminate/view": "^11.15|^12.0|^13.0",
                 "larastan/larastan": "^3.0",
-                "livewire/livewire": "^3.3.5",
+                "livewire/livewire": "^3.3.5|^4.0",
                 "php": "^8.2",
                 "phpstan/phpstan": "^2.0.1"
             },
             "require-dev": {
-                "orchestra/testbench": "^9.9|^10.0",
-                "phpunit/phpunit": "^11.3.6",
+                "orchestra/testbench": "^9.9|^10.0|^11.0",
+                "phpunit/phpunit": "^11.3.6|^12.5.12",
                 "rector/rector": "^2.0",
-                "symplify/easy-coding-standard": "^12.1.1",
+                "symplify/easy-coding-standard": "^12.1.1|^13.0",
                 "tomasvotruba/class-leak": "^2.0"
             },
             "type": "phpstan-extension",
@@ -13092,7 +13092,7 @@
             ],
             "support": {
                 "issues": "https://github.com/bladestan/bladestan/issues",
-                "source": "https://github.com/bladestan/bladestan/tree/0.11.3"
+                "source": "https://github.com/bladestan/bladestan/tree/0.11.7"
             },
             "funding": [
                 {
@@ -13104,7 +13104,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-04-30T12:55:55+00:00"
+            "time": "2026-07-17T23:14:57+00:00"
         }
     ],
     "aliases": [],
@@ -13126,5 +13126,5 @@
     "platform-overrides": {
         "ext-mcrypt": "1.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
