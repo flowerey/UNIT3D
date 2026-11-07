@@ -9169,26 +9169,28 @@
         },
         {
             "name": "calebdw/larastan-livewire",
-            "version": "v2.3.0",
+            "version": "v2.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/calebdw/larastan-livewire.git",
-                "reference": "fb537cd27374af153c4489f059a235cf6bea11f8"
+                "reference": "5f6d1665d57ba9f422e6b78f00eab0e1313e9505"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/calebdw/larastan-livewire/zipball/fb537cd27374af153c4489f059a235cf6bea11f8",
-                "reference": "fb537cd27374af153c4489f059a235cf6bea11f8",
+                "url": "https://api.github.com/repos/calebdw/larastan-livewire/zipball/5f6d1665d57ba9f422e6b78f00eab0e1313e9505",
+                "reference": "5f6d1665d57ba9f422e6b78f00eab0e1313e9505",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "^10.0 || ^11.0 || ^12.0",
-                "livewire/livewire": "^3.3",
+                "illuminate/support": "^10.0 || ^11.0 || ^12.0 || ^13.0",
+                "illuminate/view": "^10.0 || ^11.0 || ^12.0 || ^13.0",
+                "livewire/livewire": "^3.3 || ^4.0",
                 "php": "^8.2",
                 "phpstan/phpstan": "^2.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^11.5"
+                "boundwize/structarmed": "^0.19.3",
+                "phpunit/phpunit": "^11.5 || ^12.5 || ^13.4"
             },
             "type": "phpstan-extension",
             "extra": {
@@ -9223,7 +9225,7 @@
             ],
             "support": {
                 "issues": "https://github.com/calebdw/larastan-livewire/issues",
-                "source": "https://github.com/calebdw/larastan-livewire/tree/v2.3.0"
+                "source": "https://github.com/calebdw/larastan-livewire/tree/v2.6.0"
             },
             "funding": [
                 {
@@ -9231,7 +9233,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-08-20T14:52:29+00:00"
+            "time": "2026-11-02T15:09:15+00:00",
+            "published-time": "2026-11-02T15:09:58+00:00"
         },
         {
             "name": "fakerphp/faker",
@@ -13126,5 +13129,5 @@
     "platform-overrides": {
         "ext-mcrypt": "1.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.11.0"
 }
